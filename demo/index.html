@@ -5,10 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Cool lyrics demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../dist/app.css">
+  <link rel="stylesheet" href="app.css">
 </head>
 <body>
-  <div class="hello">Test text</div>
-  <script src="../dist/app.js"></script>
+  <audio controls id="song1">
+    <source src="audio/last-surprise.mp3" type="audio/mpeg">
+  </audio>
+  <div data-cool-lyrics data-lyrics-src="lyrics/last-surprise.lrc" data-audio="#song1">
+  </div>
+  <script src="app.js"></script>
 </body>
 </html>
