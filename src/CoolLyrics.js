@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 export default class CoolLyrics {
   /**
    * @param {HTMLElement} element Target HTML element. Necessary
@@ -27,7 +29,11 @@ export default class CoolLyrics {
     // generate contents
     this.lyricsData.body.forEach((v, index, a) => {
       a[index].element = document.createElement('p');
-      a[index].element.textContent = a[index].content;
+      a[index].element.appendChild($('<span>').text(a[index].content)[0]);
+      if (a[index].translation) {
+        a[index].element.appendChild(document.createElement('br'));
+        a[index].element.appendChild($('<span>').html(a[index].translation.split('\n').join('<br>'))[0]);
+      }
       this.element.appendChild(a[index].element);
     });
     this.currentLineIndex = -1;
@@ -70,7 +76,6 @@ export default class CoolLyrics {
    * @param {Number} time
    */
   setCurrentTime(time) {
-    console.log("Time set: " + time);
     let newCurrentLineIndex = this._getLineIndexByTime(time);
     if (newCurrentLineIndex != this.currentLineIndex) {
       if (this.currentLineIndex != -1) {
@@ -107,14 +112,27 @@ export default class CoolLyrics {
           time: minute * 60 + second + msec / 100,
           content: res[4].trim()
         });
+      } else {
+        // If all of these doesn't match up, we consider this line a translation line
+        let trimmedLine = line.trim();
+        if (trimmedLine != "" && this.lyricsData.body.length) {
+          if (!this.lyricsData.body[this.lyricsData.body.length - 1].translation) {
+            this.lyricsData.body[this.lyricsData.body.length - 1].translation = trimmedLine;
+          } else {
+            this.lyricsData.body[this.lyricsData.body.length - 1].translation += "\n" + trimmedLine;
+          }
+          
+        }
       }
     });
+    console.log(this.lyricsData);
   }
 
   /**
    * @param {Number} time 
    */
   _getLineIndexByTime(time) {
+    // TODO(sonicmisora): can be improved using binary-search
     for (let i = 0; i < this.lyricsData.body.length; i++) {
       if (this.lyricsData.body[i].time > time) {
         return i - 1;
