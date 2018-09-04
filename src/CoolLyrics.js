@@ -16,29 +16,6 @@ export default class CoolLyrics {
     this._regenerateContents();
   }
 
-  _regenerateContents() {
-    this.lyricsData = {
-      meta: {},
-      body: []
-    };
-    if (this.rawLyrics) {
-      this._parseLyrics();
-    }
-    // clear the main element
-    this.element.innerHTML = "";
-    // generate contents
-    this.lyricsData.body.forEach((v, index, a) => {
-      a[index].element = document.createElement('p');
-      a[index].element.appendChild($('<span>').text(a[index].content)[0]);
-      if (a[index].translation) {
-        a[index].element.appendChild(document.createElement('br'));
-        a[index].element.appendChild($('<span>').html(a[index].translation.split('\n').join('<br>'))[0]);
-      }
-      this.element.appendChild(a[index].element);
-    });
-    this.currentLineIndex = -1;
-  }
-
   /**
    * @param {string} content
    */
@@ -139,5 +116,40 @@ export default class CoolLyrics {
       }
     }
     return this.lyricsData.body.length - 1;
+  }
+
+  _regenerateContents() {
+    this.lyricsData = {
+      meta: {},
+      body: []
+    };
+    if (this.rawLyrics) {
+      this._parseLyrics();
+    }
+    this._renderSplitView();
+  }
+
+  _renderMixView() {
+    // clear the board
+    this.element.innerHTML = "";
+    // generate contents
+    this.lyricsData.body.forEach((v, index, a) => {
+      a[index].element = document.createElement('p');
+      a[index].element.appendChild($('<span>').text(a[index].content)[0]);
+      if (a[index].translation) {
+        a[index].element.appendChild(document.createElement('br'));
+        a[index].element.appendChild($('<span>').html(a[index].translation.split('\n').join('<br>'))[0]);
+      }
+      this.element.appendChild(a[index].element);
+    });
+    this.currentLineIndex = -1;
+  }
+
+  _renderSplitView() {
+    // clear the board
+    this.element.innerHTML = "";
+    // generate contents
+    $('<div class="light"></div>').appendTo(this.element);
+    $('<div class="dark"></div>').appendTo(this.element);
   }
 }
