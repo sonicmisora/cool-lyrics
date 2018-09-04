@@ -113,7 +113,7 @@ export default class CoolLyrics {
           content: res[4].trim()
         });
       } else {
-        // If all of these doesn't match up, we consider this line a translation line
+        // If all of these do not match up, we consider this line a translation line
         let trimmedLine = line.trim();
         if (trimmedLine != "" && this.lyricsData.body.length) {
           if (!this.lyricsData.body[this.lyricsData.body.length - 1].translation) {
